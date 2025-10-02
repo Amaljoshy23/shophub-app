@@ -4,6 +4,8 @@ import {
   signOut,
   onAuthStateChanged,
   updateProfile,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { auth, db } from './firebase';
@@ -50,6 +52,40 @@ export const loginUser = async (email, password) => {
       uid: user.uid,
       email: user.email,
       displayName: user.displayName,
+      role: userData?.role || 'customer',
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Sign in with Google
+export const loginWithGoogle = async () => {
+  try {
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+
+    // Ensure a Firestore user doc exists
+    const ref = doc(db, 'users', user.uid);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) {
+      await setDoc(ref, {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName || '',
+        role: 'customer',
+        createdAt: new Date().toISOString(),
+        orderHistory: [],
+      });
+    }
+
+    const userData = (await getDoc(ref)).data();
+
+    return {
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName || userData?.displayName || '',
       role: userData?.role || 'customer',
     };
   } catch (error) {

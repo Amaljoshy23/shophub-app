@@ -65,8 +65,44 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Featured Products */}
+      {/* Epic Showdown Section */}
       <section className="section-padding bg-white">
+        <div className="container-custom">
+          <div className="card overflow-hidden">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+              {/* Visual */}
+              <div className="relative bg-gray-100 min-h-[260px] md:min-h-[420px] order-2 md:order-1">
+                <img
+                  src="/images/spidey-superman.png"
+                  alt="Stylized comic scene depicting a face-off between two superheroes"
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+                  <span className="text-5xl md:text-7xl font-extrabold text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.35)]">VS</span>
+                </div>
+              </div>
+              {/* Copy */}
+              <div className="p-8 md:p-12 flex flex-col justify-center order-1 md:order-2">
+                <span className="badge badge-warning w-max mb-4">Special Feature</span>
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                  Epic Showdown
+                </h2>
+                <p className="text-gray-600 mb-6">
+                  Celebrate iconic rivalries with exclusive-themed merchandise and deals. Gear up and pick your side.
+                </p>
+                <div className="flex gap-3">
+                  <Link to="/products" className="btn btn-primary btn-lg">Explore Deals</Link>
+                  <a href="#featured" className="btn btn-outline btn-lg">View Featured</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Products */}
+      <section id="featured" className="section-padding bg-white">
         <div className="container-custom">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -158,6 +194,42 @@ const Home = () => {
           </div>
         </section>
       )}
+
+      {/* Gift Promo (Illustration) */}
+      <section className="section-padding">
+        <div className="container-custom">
+          <div className="card overflow-hidden">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+              {/* Text */}
+              <div className="p-8 md:p-12 flex flex-col justify-center">
+                <span className="badge badge-primary w-max mb-4">Limited Time</span>
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                  Make Someone Smile Today
+                </h2>
+                <p className="text-gray-600 mb-6">
+                  Surprise your loved ones with thoughtful gifts. Discover curated picks for every
+                  occasion and budget.
+                </p>
+                <div>
+                  <Link to="/products?category=all" className="btn btn-primary btn-lg">
+                    Shop Gifts
+                  </Link>
+                </div>
+              </div>
+              {/* Illustration */}
+              <div className="relative min-h-[260px] md:min-h-[380px] bg-gray-100">
+                <img
+                  className="w-full h-full object-cover"
+                  src="https://images.unsplash.com/photo-1602576666092-bf6447a729fc?q=80&w=1600&auto=format&fit=crop"
+                  alt="Illustration of a man giving a gift to a girl"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-tr from-white/0 to-white/0 md:to-white/0" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Why Choose Us */}
       <section className="section-padding bg-white">

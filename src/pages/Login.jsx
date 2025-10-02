@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setUser, setLoading, setError } from '../redux/slices/authSlice';
-import { loginUser } from '../services/authService';
+import { loginUser, loginWithGoogle } from '../services/authService';
 import toast from 'react-hot-toast';
 
 const Login = () => {
@@ -31,6 +31,24 @@ const Login = () => {
       console.error('Login error:', error);
       dispatch(setError(error.message));
       toast.error(error.message || 'Failed to login');
+    } finally {
+      setLoadingState(false);
+      dispatch(setLoading(false));
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      setLoadingState(true);
+      dispatch(setLoading(true));
+      const userData = await loginWithGoogle();
+      dispatch(setUser(userData));
+      toast.success('Signed in with Google!');
+      navigate('/');
+    } catch (error) {
+      console.error('Google sign-in error:', error);
+      dispatch(setError(error.message));
+      toast.error(error.message || 'Failed to sign in with Google');
     } finally {
       setLoadingState(false);
       dispatch(setLoading(false));
@@ -122,7 +140,12 @@ const Login = () => {
             </div>
 
             <div className="mt-6 grid grid-cols-2 gap-3">
-              <button className="w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+              <button
+                type="button"
+                onClick={handleGoogleSignIn}
+                disabled={loading}
+                className="w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition disabled:bg-gray-100 disabled:cursor-not-allowed"
+              >
                 <svg className="h-5 w-5" viewBox="0 0 24 24">
                   <path
                     fill="#4285F4"
