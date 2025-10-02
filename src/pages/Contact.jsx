@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { 
   PhoneIcon, 
   EnvelopeIcon, 
@@ -18,6 +18,14 @@ const Contact = () => {
     category: 'general'
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // AI Chat state
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatInput, setChatInput] = useState('');
+  const [chatMessages, setChatMessages] = useState([
+    { role: 'bot', text: "Hi! I'm ShopHub Assistant. How can I help you today? (e.g., order status, returns, shipping, products)" }
+  ]);
+  const chatEndRef = useRef(null);
 
   const contactInfo = [
     {
@@ -81,6 +89,48 @@ const Contact = () => {
       [name]: value
     }));
   };
+
+  // Simple local AI logic
+  const botReply = (userText) => {
+    const text = userText.toLowerCase();
+    if (/track|status|order/.test(text)) {
+      return 'You can track your order in Account > Orders. If you have a tracking ID, paste it and I can guide you to the carrier site.';
+    }
+    if (/return|refund/.test(text)) {
+      return 'We offer 30-day returns. Start a return from Account > Orders, select the item, and choose Return. Need help with a specific order?';
+    }
+    if (/ship|delivery|when/.test(text)) {
+      return 'Standard shipping is 3-5 business days. Express options are available at checkout. What is your destination country/postal code?';
+    }
+    if (/payment|pay|card|upi|wallet/.test(text)) {
+      return 'We accept major cards, UPI, and wallets. Payments are processed securely. Are you facing an error at checkout?';
+    }
+    if (/product|stock|available|size|color/.test(text)) {
+      return 'I can help with product availability and details. Share the product name or link, and what you are looking for.';
+    }
+    return "I'm here to help! Could you share more details about your issue (order, returns, shipping, product)?";
+  };
+
+  const sendChat = () => {
+    const text = chatInput.trim();
+    if (!text) return;
+    setChatMessages(prev => [...prev, { role: 'user', text }]);
+    setChatInput('');
+    setTimeout(() => {
+      setChatMessages(prev => [...prev, { role: 'bot', text: botReply(text) }]);
+    }, 500);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendChat();
+    }
+  };
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatMessages, chatOpen]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -350,8 +400,8 @@ const Contact = () => {
               <p className="text-gray-600 mb-6">
                 Get instant help from our support team. Available 24/7 for urgent matters.
               </p>
-              <button className="btn btn-success">
-                Start Chat
+              <button className="btn btn-success" onClick={() => setChatOpen(true)}>
+                Start AI Chat
               </button>
             </div>
             
@@ -387,6 +437,60 @@ const Contact = () => {
           </div>
         </div>
       </section>
+
+      {/* AI Chat Modal */}
+      {chatOpen && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-6">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setChatOpen(false)}></div>
+          <div className="relative bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl shadow-xl overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center justify-between px-4 py-3 border-b">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                  <ChatBubbleLeftRightIcon className="w-5 h-5 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">ShopHub Assistant</p>
+                  <p className="text-xs text-gray-500">Typically replies in seconds</p>
+                </div>
+              </div>
+              <button className="text-gray-500 hover:text-gray-700" onClick={() => setChatOpen(false)} aria-label="Close chat">✕</button>
+            </div>
+            {/* Messages */}
+            <div className="h-80 overflow-y-auto p-4 space-y-3 bg-gray-50">
+              {chatMessages.map((m, i) => (
+                <div key={i} className={m.role === 'user' ? 'flex justify-end' : 'flex justify-start'}>
+                  <div className={
+                    'max-w-[80%] px-3 py-2 rounded-lg text-sm ' +
+                    (m.role === 'user' ? 'bg-blue-600 text-white rounded-br-none' : 'bg-white border rounded-bl-none')
+                  }>
+                    {m.text}
+                  </div>
+                </div>
+              ))}
+              <div ref={chatEndRef} />
+            </div>
+            {/* Composer */}
+            <div className="p-3 border-t bg-white">
+              <div className="flex items-center gap-2">
+                <textarea
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Type your message..."
+                  rows={1}
+                  className="input resize-none !py-2 !h-10"
+                />
+                <button className="btn btn-primary" onClick={sendChat}>
+                  Send
+                </button>
+              </div>
+              <p className="text-[11px] text-gray-500 mt-2">This AI assistant provides general guidance and is not a substitute for a human agent.</p>
+            </div>
+          </div>
+        </div>
+      )}
+      
     </div>
   );
 };
