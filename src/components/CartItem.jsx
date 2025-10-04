@@ -5,6 +5,13 @@ import { TrashIcon, PlusIcon, MinusIcon } from '@heroicons/react/24/outline';
 const CartItem = ({ item }) => {
   const dispatch = useDispatch();
 
+  const formatINR = (value) =>
+    new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      maximumFractionDigits: 2,
+    }).format(value);
+
   const handleIncrease = () => {
     dispatch(addItem(item));
   };
@@ -27,7 +34,7 @@ const CartItem = ({ item }) => {
       <div className="flex-1">
         <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>
         <p className="text-sm text-gray-600">{item.category}</p>
-        <p className="text-lg font-bold text-indigo-600 mt-1">${item.price}</p>
+        <p className="text-lg font-bold text-indigo-600 mt-1">{formatINR(item.price)}</p>
       </div>
       <div className="flex items-center gap-3">
         <button
@@ -46,7 +53,7 @@ const CartItem = ({ item }) => {
       </div>
       <div className="flex flex-col items-end gap-2">
         <p className="text-xl font-bold text-gray-800">
-          ${item.totalPrice.toFixed(2)}
+          {formatINR(item.totalPrice)}
         </p>
         <button
           onClick={handleRemove}
