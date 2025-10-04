@@ -167,10 +167,10 @@ const Navbar = () => {
 
           {/* Right Side Icons */}
           <div className="flex items-center space-x-4">
-            {/* Wishlist (placeholder) */}
-            <button className="p-2 text-gray-700 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all duration-200">
+            {/* Favorites */}
+            <Link to="/favorites" className="p-2 text-gray-700 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all duration-200">
               <HeartIcon className="h-6 w-6" />
-            </button>
+            </Link>
 
             {/* Cart Icon */}
             <Link to="/cart" className="relative p-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200">

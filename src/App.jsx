@@ -21,6 +21,7 @@ import Contact from './pages/Contact';
 import FAQ from './pages/FAQ';
 import Terms from './pages/Terms';
 import OrderConfirmation from './pages/OrderConfirmation';
+import Favorites from './pages/Favorites';
 
 function App() {
   const dispatch = useDispatch();
@@ -54,6 +55,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/terms" element={<Terms />} />
+          <Route path="/favorites" element={<Favorites />} />
           <Route path="/order-confirmation/:orderId?" element={<OrderConfirmation />} />
         </Routes>
         <Footer />
