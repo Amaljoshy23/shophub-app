@@ -1,15 +1,27 @@
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { UserIcon, EnvelopeIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
+import { updateProfile } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../services/firebase';
+import toast from 'react-hot-toast';
+import { setUser } from '../redux/slices/authSlice';
 
 const Profile = () => {
   const { user, isAuthenticated } = useSelector((state) => state.auth);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  if (!isAuthenticated) {
-    navigate('/login');
-    return null;
-  }
+  const [editing, setEditing] = useState(false);
+  const [fullName, setFullName] = useState(user?.displayName || '');
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login');
+    }
+  }, [isAuthenticated, navigate]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -25,6 +37,23 @@ const Profile = () => {
               <h2 className="text-2xl font-bold text-gray-800">{user?.displayName}</h2>
               <p className="text-gray-600">{user?.email}</p>
             </div>
+            <div className="ml-auto">
+              {!editing ? (
+                <button
+                  onClick={() => setEditing(true)}
+                  className="btn btn-secondary"
+                >
+                  Edit Profile
+                </button>
+              ) : (
+                <button
+                  onClick={() => { setEditing(false); setFullName(user?.displayName || ''); }}
+                  className="btn btn-secondary"
+                >
+                  Cancel
+                </button>
+              )}
+            </div>
           </div>
 
           <div className="border-t pt-6">
@@ -33,9 +62,19 @@ const Profile = () => {
             <div className="space-y-4">
               <div className="flex items-center gap-4">
                 <UserIcon className="h-6 w-6 text-gray-400" />
-                <div>
+                <div className="w-full">
                   <p className="text-sm text-gray-600">Full Name</p>
-                  <p className="font-semibold text-gray-800">{user?.displayName}</p>
+                  {!editing ? (
+                    <p className="font-semibold text-gray-800">{user?.displayName}</p>
+                  ) : (
+                    <input
+                      type="text"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      className="input mt-1"
+                      placeholder="Enter your full name"
+                    />
+                  )}
                 </div>
               </div>
 
@@ -56,6 +95,51 @@ const Profile = () => {
               </div>
             </div>
           </div>
+
+          {editing && (
+            <div className="border-t mt-8 pt-6">
+              <button
+                disabled={saving || !fullName.trim()}
+                onClick={async () => {
+                  try {
+                    setSaving(true);
+                    const current = auth.currentUser;
+                    if (!current) throw new Error('No authenticated user');
+                    // Update Firebase Auth profile
+                    await updateProfile(current, { displayName: fullName.trim() });
+                    // Upsert Firestore user doc
+                    await setDoc(
+                      doc(db, 'users', current.uid),
+                      {
+                        uid: current.uid,
+                        email: current.email,
+                        displayName: fullName.trim(),
+                      },
+                      { merge: true }
+                    );
+                    // Reflect immediately in Redux
+                    dispatch(setUser({
+                      uid: current.uid,
+                      email: current.email,
+                      displayName: fullName.trim(),
+                      role: user?.role || 'customer',
+                    }));
+                    toast.success('Profile updated');
+                    setEditing(false);
+                  } catch (err) {
+                    // eslint-disable-next-line no-console
+                    console.error('Profile update failed:', err);
+                    toast.error('Failed to update profile');
+                  } finally {
+                    setSaving(false);
+                  }
+                }}
+                className="btn btn-primary"
+              >
+                {saving ? 'Saving...' : 'Save Changes'}
+              </button>
+            </div>
+          )}
 
           <div className="border-t mt-8 pt-6">
             <h3 className="text-xl font-semibold text-gray-800 mb-4">Quick Actions</h3>
