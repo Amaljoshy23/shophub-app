@@ -11,13 +11,6 @@ const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const formatINR = (value) =>
-    new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      maximumFractionDigits: 2,
-    }).format(value);
-
   const shippingCost = totalAmount > 50 ? 0 : 5.99;
   const tax = totalAmount * 0.1;
   const finalTotal = totalAmount + shippingCost + tax;
@@ -83,7 +76,7 @@ const Cart = () => {
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between text-gray-700">
                   <span>Subtotal ({totalQuantity} items)</span>
-                  <span className="font-semibold">{formatINR(totalAmount)}</span>
+                  <span className="font-semibold">${totalAmount.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-gray-700">
                   <span>Shipping</span>
@@ -91,24 +84,24 @@ const Cart = () => {
                     {shippingCost === 0 ? (
                       <span className="text-green-600">FREE</span>
                     ) : (
-                      formatINR(shippingCost)
+                      `$${shippingCost.toFixed(2)}`
                     )}
                   </span>
                 </div>
                 <div className="flex justify-between text-gray-700">
                   <span>Tax (10%)</span>
-                  <span className="font-semibold">{formatINR(tax)}</span>
+                  <span className="font-semibold">${tax.toFixed(2)}</span>
                 </div>
                 <div className="border-t pt-4 flex justify-between text-xl font-bold text-gray-800">
                   <span>Total</span>
-                  <span className="text-indigo-600">{formatINR(finalTotal)}</span>
+                  <span className="text-indigo-600">${finalTotal.toFixed(2)}</span>
                 </div>
               </div>
 
               {totalAmount < 50 && (
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
                   <p className="text-sm text-blue-800">
-                    Add {formatINR(50 - totalAmount)} more to get FREE shipping!
+                    Add ${(50 - totalAmount).toFixed(2)} more to get FREE shipping!
                   </p>
                 </div>
               )}

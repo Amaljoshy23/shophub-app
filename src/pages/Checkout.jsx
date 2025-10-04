@@ -11,13 +11,6 @@ const Checkout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const formatINR = (value) =>
-    new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      maximumFractionDigits: 2,
-    }).format(value);
-
   const [formData, setFormData] = useState({
     fullName: user?.displayName || '',
     email: user?.email || '',
@@ -298,7 +291,7 @@ const Checkout = () => {
                           Qty: {item.quantity}
                         </p>
                         <p className="text-sm font-bold text-indigo-600">
-                          {formatINR(item.totalPrice)}
+                          ${item.totalPrice.toFixed(2)}
                         </p>
                       </div>
                     </div>
@@ -308,7 +301,7 @@ const Checkout = () => {
                 <div className="border-t pt-4 space-y-2">
                   <div className="flex justify-between text-gray-700">
                     <span>Subtotal</span>
-                    <span>{formatINR(totalAmount)}</span>
+                    <span>${totalAmount.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-gray-700">
                     <span>Shipping</span>
@@ -316,18 +309,20 @@ const Checkout = () => {
                       {shippingCost === 0 ? (
                         <span className="text-green-600">FREE</span>
                       ) : (
-                        formatINR(shippingCost)
+                        `$${shippingCost.toFixed(2)}`
                       )}
                     </span>
                   </div>
                   <div className="flex justify-between text-gray-700">
-                    <span>Tax (10%)</span>
-                    <span className="font-semibold">{formatINR(tax)}</span>
+                    <span>Tax</span>
+                    <span>${tax.toFixed(2)}</span>
                   </div>
                   <div className="border-t pt-2 flex justify-between text-xl font-bold text-gray-800">
                     <span>Total</span>
-                    <span className="text-indigo-600">{formatINR(finalTotal)}</span>
+                    <span className="text-indigo-600">${finalTotal.toFixed(2)}</span>
                   </div>
+                </div>
+
                 <button
                   type="submit"
                   disabled={loading}
