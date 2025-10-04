@@ -106,11 +106,11 @@ const ProductCard = ({ product }) => {
           <div className="flex items-center justify-between">
             <div className="flex flex-col">
               <span className="text-2xl font-bold text-indigo-600">
-                ₹{product.price}
+                ${product.price}
               </span>
               {product.originalPrice && (
                 <span className="text-sm text-gray-400 line-through">
-                  ₹{product.originalPrice}
+                  ${product.originalPrice}
                 </span>
               )}
             </div>
