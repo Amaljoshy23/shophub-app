@@ -31,19 +31,19 @@ const Contact = () => {
     {
       icon: <PhoneIcon className="w-6 h-6" />,
       title: 'Phone',
-      details: ['+1 (555) 123-4567', '+1 (555) 987-6543'],
+      details: ['1234567890', '0987654321'],
       description: 'Mon-Fri 9AM-6PM EST'
     },
     {
       icon: <EnvelopeIcon className="w-6 h-6" />,
       title: 'Email',
-      details: ['support@ecommerce.com', 'sales@ecommerce.com'],
+      details: ['amaljosh@gmzil.com', 'amj@gmmail.com'],
       description: 'We reply within 24 hours'
     },
     {
       icon: <MapPinIcon className="w-6 h-6" />,
       title: 'Address',
-      details: ['123 Business Ave', 'New York, NY 10001'],
+      details: ['Ahbhcbfh H', 'Thrissur, Kerala, India'],
       description: 'Visit our headquarters'
     },
     {
@@ -343,8 +343,8 @@ const Contact = () => {
                       Visit Our Office
                     </h3>
                     <p className="text-gray-600">
-                      123 Business Ave<br />
-                      New York, NY 10001
+                      Ahbhcbfh H<br />
+                      Thrissur, Kerala, India
                     </p>
                   </div>
                 </div>

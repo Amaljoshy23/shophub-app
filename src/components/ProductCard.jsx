@@ -88,7 +88,7 @@ const ProductCard = ({ product }) => {
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
+            className="w-full h-48 sm:h-56 md:h-64 object-contain bg-white group-hover:scale-110 transition-transform duration-300"
           />
           {product.discount && (
             <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-md text-sm font-semibold">
@@ -96,7 +96,7 @@ const ProductCard = ({ product }) => {
             </div>
           )}
         </div>
-        <div className="p-4">
+        <div className="p-3 sm:p-4">
           <h3 className="text-lg font-semibold text-gray-800 mb-2 line-clamp-2">
             {product.name}
           </h3>

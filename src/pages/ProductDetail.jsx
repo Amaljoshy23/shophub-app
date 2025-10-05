@@ -267,7 +267,7 @@ const ProductDetail = () => {
 
             {/* Action Buttons */}
             <div className="space-y-4">
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <button
                   onClick={handleAddToCart}
                   disabled={!currentProduct.inStock}
@@ -286,7 +286,7 @@ const ProductDetail = () => {
               </div>
 
               {/* Secondary Actions */}
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <button className="flex-1 btn btn-secondary flex items-center justify-center gap-2">
                   <HeartIcon className="w-5 h-5" />
                   Add to Wishlist
