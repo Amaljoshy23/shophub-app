@@ -8,6 +8,8 @@ import {
   QuestionMarkCircleIcon
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
+import { addMessage } from '../services/messagesService';
+import { auth } from '../services/firebase';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -136,9 +138,12 @@ const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const user = auth?.currentUser;
+      await addMessage({
+        ...formData,
+        uid: user?.uid || null,
+      });
       toast.success('Message sent successfully! We\'ll get back to you soon.');
       setFormData({
         name: '',

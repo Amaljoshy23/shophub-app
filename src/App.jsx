@@ -15,6 +15,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Orders from './pages/Orders';
 import Admin from './pages/Admin';
+import AdminDashboard from './pages/AdminDashboard';
 import Profile from './pages/Profile';
 import About from './pages/About';
 import Contact from './pages/Contact';
@@ -51,6 +52,7 @@ function App() {
           <Route path="/orders" element={<Orders />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/faq" element={<FAQ />} />
